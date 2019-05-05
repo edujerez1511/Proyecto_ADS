@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>The STOP - Coffee and Food</title>
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/alertify.core.css" />
+        <h:outputStylesheet name="css/alertify.default.css" />
+        <h:outputScript name="js/alertify.js"/>
+    </h:head>
+    <h:body>
+        
+        <b:navBar brand="The STOP" brandHref="../index.xhtml" inverse="true" >
+                <b:navbarLinks style="font-size: 15px;" styleClass="hidden-xs">
+                </b:navbarLinks>
+                
+                <b:navbarLinks pull="right" style="font-size: 15px;" styleClass="hidden-xs">
+    
+                    <b:dropMenu value="Perfil" iconAwesome="user-circle" >
+                        <c:if test="#{loginController.sessionStart == null}">
+                        <b:navLink outcome="/Usuario/registroUsuarios.xhtml">
+                            Registrar
+                        </b:navLink>
+                            
+                        <b:navLink outcome="Login.xhtml">
+                            Iniciar Sesion
+                        </b:navLink>                            
+                      </c:if>
+                        
+                        <c:if test="#{loginController.sessionStart !=null}">
+                            <h:form>
+                                <h:outputText value="#{loginController.authUser.nombre}"/>
+                            <b:commandButton action="#{loginController.logout()}">
+                                Cerrar Sesion
+                            </b:commandButton>                            
+                            </h:form>
+                        </c:if>
+                    </b:dropMenu>
+                </b:navbarLinks>
+
+            </b:navBar>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Registro de Menu</h2>
+                    <h:form id="miFormulario" class="form-group">
+                        <h:panelGrid columns="2" cellpadding="5" id="panel">
+
+                            <h:outputLabel for="descripcion" value="Descripcion:"/>
+                            <h:inputText id="descripcion" styleClass="form-control" 
+                                         value="#{menuController.menu.descripcion}" 
+                                         required="true" 
+                                         requiredMessage="Debes ingresar una descripción"/>
+
+                            <h:outputLabel for="precio" value="Precio:" />
+                            <h:inputText id="precio" styleClass="form-control"
+                                         value="#{menuController.menu.precio}"
+                                         validatorMessage="Debe ingresar un precio válido">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+
+
+                        </h:panelGrid>
+                        
+                        <p:toolbar style="background-color: white; border: none;">
+              <f:facet name="left">
+                  <b:commandButton value="Guardar" class="btn btn-primary" action="#{menuController.nuevoMenu()}">
+                </b:commandButton>
+              </f:facet>
+                
+              <f:facet name="right">
+                <b:commandButton value="Restablecer" class="btn btn-danger" style="margin-right:600px;" >
+                    <p:ajax update="panel" resetValues="true" />
+                </b:commandButton>
+              </f:facet>
+              
+              </p:toolbar>
+                    </h:form>
+                </div>
+            </div>
+
+            <div class="row">
+                <h:form id="tablaCliente">
+                    <b:dataTable value="#{menuController.menuList}" var="menu" excel="true"
+                    csv="true"
+                    pdf="true"
+                    columnVisibility="true"
+                    copy="true"
+                    print="true"
+                    style="width: 100%; margin:0 auto;"
+                    responsive="true"
+                    class="table-striped table-bordered"
+                    >
+                        
+                        <b:dataTableColumn value="#{menu.codProducto}" label="Código Producto" />
+                        <b:dataTableColumn value="#{menu.descripcion}" label="Descripción" />
+                        <b:dataTableColumn value="#{menu.precio}" label="Precio" />
+                        <b:dataTableColumn label="Operaciones">
+            <center>
+                <b:commandButton value="Modificar" action="#{menuController.editarMenu(menu)}" class="btn-success btn-sm"></b:commandButton>
+               &nbsp;
+               <b:commandButton value="Eliminar" action="#{menuController.eliminarMenu(menu.codProducto)}" onclick="return confirm('¿Esta seguro de eliminar este Producto?')" class="btn-danger btn-sm"></b:commandButton>   
+            </center>
+        </b:dataTableColumn> 
+                    </b:dataTable>
+                    <b:messages/>
+            </h:form>
+            </div>
+        </div>
+        
+        <footer class="py-5 bg-dark">
+      <div class="container">
+                <b:panel style="background-color: black; color: white; bottom: auto " >
+                    <p class="m-0 text-center text-white" style="font-size: 11pt;">&copy; 2019 | The STOP, Todos los derechos reservados.</p>
+                </b:panel>
+      </div>
+    </footer>
+    </h:body>
+</html>

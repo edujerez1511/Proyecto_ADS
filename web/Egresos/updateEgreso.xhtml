@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>The STOP - Coffee and Food</title>
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/alertify.core.css" />
+        <h:outputStylesheet name="css/alertify.default.css" />
+        <h:outputScript name="js/alertify.js"/>
+    </h:head>
+    <h:body>
+        <b:navBar brand="The STOP" brandHref="../index.xhtml" inverse="true" >
+                <b:navbarLinks style="font-size: 15px;" styleClass="hidden-xs">
+                </b:navbarLinks>
+                
+                <b:navbarLinks pull="right" style="font-size: 15px;" styleClass="hidden-xs">
+    
+                    <b:dropMenu value="Perfil" iconAwesome="user-circle" >
+                        <c:if test="#{loginController.sessionStart == null}">
+                        <b:navLink outcome="/Usuario/registroUsuarios.xhtml">
+                            Registrar
+                        </b:navLink>
+                            
+                        <b:navLink outcome="Login.xhtml">
+                            Iniciar Sesion
+                        </b:navLink>                            
+                      </c:if>
+                        
+                        <c:if test="#{loginController.sessionStart !=null}">
+                            <h:form>
+                                <h:outputText value="#{loginController.authUser.nombre}"/>
+                            <b:commandButton action="#{loginController.logout()}">
+                                Cerrar Sesion
+                            </b:commandButton>                            
+                            </h:form>
+                        </c:if>
+                    </b:dropMenu>
+                </b:navbarLinks>
+
+            </b:navBar>
+        
+        <h1 class="mt-4 mb-3">Editar Egreso
+        <small>The STOP</small>
+      </h1>
+
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="../index.xhtml">Inicio</a>
+        </li>
+        <li class="breadcrumb-item active">Modificar Egreso</li>
+      </ol>
+        <li class="breadcrumb" style="width: 87px">
+          <a href="registroEgresos.xhtml">Cancelar</a>
+        </li>
+        
+        <div class="container">
+        <div class="row">
+            <div class="col-lg-12"> 
+                <h3>Egreso</h3>
+                <hr></hr>
+        <h:form id="Form" class="form-group">
+            <h:panelGrid columns="2" cellpadding="5" id="panel">
+                
+                <h:inputHidden id="id" value="#{controlEgresosController.controlEgresos.idEgreso}" required="true" requiredMessage="Por favor ingrese un ID Valido">
+                </h:inputHidden>  
+                <br/>
+                
+                <h:outputLabel for="fecha" value="Fecha:"/>
+                <p:calendar id="fecha" showOn="button" value="#{controlEgresosController.controlEgresos.fecha}" required="true" requiredMessage="Seleccione una fecha"/>
+                            
+                            <h:outputLabel for="concepto" value="Concepto:"/>
+                            <h:inputText id="concepto" styleClass="form-control" 
+                                         value="#{controlEgresosController.controlEgresos.concepto}" 
+                                         required="true" 
+                                         requiredMessage="Debes ingresar el concepto"/>
+                            
+                            <h:outputLabel for="cantidad" value="Cantidad:"/>
+                            <b:inputText id="cantidad" styleClass="form-control"
+                                         value="#{controlEgresosController.controlEgresos.cantidad}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                                <b:message for="cantidad"></b:message>
+                            </b:inputText>
+                            
+            </h:panelGrid>
+            <br/>
+            <p:toolbar style="background-color: white; border: none;">
+                <f:facet name="left">
+                    <b:commandButton value="Guardar Cambios" class="btn btn-primary btn-sm" action="#{controlEgresosController.modificarEgreso()}">
+              </b:commandButton>
+                </f:facet>
+            </p:toolbar>
+        </h:form>
+    </div>
+    </div>
+    </div>
+        
+        <footer class="py-5 bg-dark">
+      <div class="container">
+                <b:panel style="background-color: black; color: white; bottom: auto " >
+                    <p class="m-0 text-center text-white" style="font-size: 11pt;">&copy; 2019 | The STOP, Todos los derechos reservados.</p>
+                </b:panel>
+      </div>
+    </footer>
+    </h:body>
+</html>
+

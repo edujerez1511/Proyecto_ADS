@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>The STOP - Coffee and Food</title>
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/alertify.core.css" />
+        <h:outputStylesheet name="css/alertify.default.css" />
+        <h:outputScript name="js/alertify.js"/>
+    </h:head>
+    <h:body>
+        
+        <b:navBar brand="The STOP" brandHref="../index.xhtml" inverse="true" >
+                <b:navbarLinks style="font-size: 15px;" styleClass="hidden-xs">
+                </b:navbarLinks>
+                
+                <b:navbarLinks pull="right" style="font-size: 15px;" styleClass="hidden-xs">
+    
+                    <b:dropMenu value="Perfil" iconAwesome="user-circle" >
+                        <c:if test="#{loginController.sessionStart == null}">
+                        <b:navLink outcome="/Usuario/registroUsuarios.xhtml">
+                            Registrar
+                        </b:navLink>
+                            
+                        <b:navLink outcome="Login.xhtml">
+                            Iniciar Sesion
+                        </b:navLink>                            
+                      </c:if>
+                        
+                        <c:if test="#{loginController.sessionStart !=null}">
+                            <h:form>
+                                <h:outputText value="#{loginController.authUser.nombre}"/>
+                            <b:commandButton action="#{loginController.logout()}">
+                                Cerrar Sesion
+                            </b:commandButton>                            
+                            </h:form>
+                        </c:if>
+                    </b:dropMenu>
+                </b:navbarLinks>
+
+            </b:navBar>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Registro de Compras</h2>
+                    <h:form id="miFormulario" class="form-group">
+                        <h:panelGrid columns="2" cellpadding="5" id="panel">
+                            
+                            <h:outputLabel for="fecha" value="Fecha:"/>
+                            <p:calendar id="fecha" showOn="button" value="#{comprasBean.compras.fecha}" required="true" requiredMessage="Seleccione una fecha"/>
+                            
+                            <h:outputLabel for="idproducto" value="Código Producto:"/>
+                            <b:inputText id="idproducto" styleClass="form-control"
+                                         value="#{comprasBean.compras.idProducto}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar el código">
+                            </b:inputText>
+                            
+                            <h:outputLabel for="cantidad" value="Cantidad:"/>
+                            <b:inputText id="cantidad" styleClass="form-control"
+                                         value="#{comprasBean.compras.cantidad}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                                <b:message for="cantidad"></b:message>
+                            </b:inputText>
+                            
+                            <h:outputLabel for="precioCompra" value="Precio Compra:"/>
+                            <b:inputText id="precioCompra" styleClass="form-control"
+                                         value="#{comprasBean.compras.precioCompra}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                                <b:message for="precioCompra"></b:message>
+                            </b:inputText>
+                            
+                            <h:outputLabel for="precioVenta" value="Cantidad:"/>
+                            <b:inputText id="precioVenta" styleClass="form-control"
+                                         value="#{comprasBean.compras.precioVenta}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                                <b:message for="precioVenta"></b:message>
+                            </b:inputText>
+                            
+                            <h:outputLabel for="totalCompra" value="Total Compra:"/>
+                            <b:inputText id="totalCompra" styleClass="form-control"
+                                         value="#{comprasBean.compras.totalCompra}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                                <b:message for="totalCompra"></b:message>
+                            </b:inputText>
+                            
+                            <h:outputLabel for="observaciones" class="col-lg-2 control-label" value="Observaciones:" />
+                            <p:inputTextarea rows="2" cols="50" id="observaciones" class="form-control" value="#{comprasBean.compras.observaciones}" validatorMessage="Ingrese información veridica">
+                                <b:message for="observaciones"></b:message>
+                            </p:inputTextarea>
+                            
+                            <h:outputLabel for="idusuario" value="Registrado por:"/>
+                            <b:inputText id="idusuario" styleClass="form-control"
+                                         value="#{comprasBean.compras.idusuario}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar el código">
+                            </b:inputText>
+
+
+                        </h:panelGrid>
+                        
+                        <p:toolbar style="background-color: white; border: none;">
+              <f:facet name="left">
+                  <b:commandButton value="Guardar" class="btn btn-primary" action="#{comprasBean.nuevaCompra()}">
+                </b:commandButton>
+              </f:facet>
+                
+              <f:facet name="right">
+                <b:commandButton value="Restablecer" class="btn btn-danger" style="margin-right:600px;" >
+                    <p:ajax update="panel" resetValues="true" />
+                </b:commandButton>
+              </f:facet>
+              
+              </p:toolbar>
+                    </h:form>
+                </div>
+            </div>
+
+            <div class="row">
+                <h:form id="tablaCliente">
+                    <b:dataTable value="#{comprasBean.comprasList}" var="com" excel="true"
+                    csv="true"
+                    pdf="true"
+                    columnVisibility="true"
+                    copy="true"
+                    print="true"
+                    style="width: 100%; margin:0 auto;"
+                    responsive="true"
+                    class="table-striped table-bordered"
+                    >
+                        
+                        <b:dataTableColumn value="#{com.idCompra}" label="Código" />
+                        <b:dataTableColumn value="#{com.fecha}" label="Fecha" />
+                        <b:dataTableColumn value="#{com.idProducto}" label="Código Producto" />
+                        <b:dataTableColumn value="#{com.cantidad}" label="Cantidad" />
+                        <b:dataTableColumn value="#{com.precioCompra}" label="Precio Compra" />
+                        <b:dataTableColumn value="#{com.precioVenta}" label="Precio Venta" />
+                        <b:dataTableColumn value="#{com.totalCompra}" label="Total Compra" />
+                        <b:dataTableColumn value="#{com.observaciones}" label="Observaciones" />
+                        <b:dataTableColumn label="Operaciones">
+            <center>
+                <b:commandButton value="Modificar" action="#{comprasBean.editarCompras(compra)}" class="btn-success btn-sm"></b:commandButton>
+                &nbsp;
+               <b:commandButton value="Eliminar" action="#{comprasBean.eliminarCompras(compra.idcompra)}" onclick="return confirm('¿Esta seguro de eliminar esta Compra?')" class="btn-danger btn-sm"></b:commandButton>   
+            </center>
+                        </b:dataTableColumn> 
+                    </b:dataTable>
+            </h:form>
+            </div>
+        </div>
+        
+        <footer class="py-5 bg-dark">
+      <div class="container">
+                <b:panel style="background-color: black; color: white; bottom: auto " >
+                    <p class="m-0 text-center text-white" style="font-size: 11pt;">&copy; 2019 | The STOP, Todos los derechos reservados.</p>
+                </b:panel>
+      </div>
+    </footer>
+    </h:body>
+</html>

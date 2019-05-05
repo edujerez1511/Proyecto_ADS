@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>The STOP - Coffee and Food</title>
+        <h:outputStylesheet name="css/bootstrap.min.css" />
+        <h:outputStylesheet name="css/alertify.core.css" />
+        <h:outputStylesheet name="css/alertify.default.css" />
+        <h:outputScript name="js/alertify.js"/>
+    </h:head>
+    <h:body>
+        
+        <b:navBar brand="The STOP" brandHref="../index.xhtml" inverse="true" >
+                <b:navbarLinks style="font-size: 15px;" styleClass="hidden-xs">
+                </b:navbarLinks>
+                
+                <b:navbarLinks pull="right" style="font-size: 15px;" styleClass="hidden-xs">
+    
+                    <b:dropMenu value="Perfil" iconAwesome="user-circle" >
+                        <c:if test="#{loginController.sessionStart == null}">
+                        <b:navLink outcome="/Usuario/registroUsuarios.xhtml">
+                            Registrar
+                        </b:navLink>
+                            
+                        <b:navLink outcome="Login.xhtml">
+                            Iniciar Sesion
+                        </b:navLink>                            
+                      </c:if>
+                        
+                        <c:if test="#{loginController.sessionStart !=null}">
+                            <h:form>
+                                <h:outputText value="#{loginController.authUser.nombre}"/>
+                            <b:commandButton action="#{loginController.logout()}">
+                                Cerrar Sesion
+                            </b:commandButton>                            
+                            </h:form>
+                        </c:if>
+                    </b:dropMenu>
+                </b:navbarLinks>
+
+            </b:navBar>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Control de Productos (Inventario)</h2>
+                    <h:form id="miFormulario" class="form-group">
+                        <h:panelGrid columns="2" cellpadding="5" id="panel">
+                            
+                             <h:outputLabel for="nombre_producto" value="Nombre Producto:"/>
+                            <h:inputText id="nombre_producto" styleClass="form-control"
+                                         value="#{productoController.producto.nombreProducto}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar el nombre del Producto">
+                            </h:inputText>
+                             
+                              <h:outputLabel for="clasificacion" value="Clasificación:"/>
+                            <h:inputText id="clasificacion" styleClass="form-control"
+                                         value="#{productoController.producto.clasificacion}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar la clasificación">
+                            </h:inputText>
+                              
+                             <h:outputLabel for="costo_compra" value="Costo Compra:"/>
+                            <h:inputText id="costo_compra" styleClass="form-control" 
+                                         value="#{productoController.producto.costoCompra}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                            <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+                             
+                             <h:outputLabel for="costo_venta" value="Costo Venta:"/>
+                            <h:inputText id="costo_venta" styleClass="form-control" 
+                                         value="#{productoController.producto.costoVenta}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                            <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+                            
+                            <h:outputLabel for="entrada" value="Entrada:"/>
+                            <h:inputText id="entrada" styleClass="form-control" 
+                                         value="#{productoController.producto.entrada}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                            <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+                            
+                            <h:outputLabel for="salida" value="Salida:"/>
+                            <h:inputText id="salida" styleClass="form-control" 
+                                         value="#{productoController.producto.salida}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                            <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+                            
+                            <h:outputLabel for="disponibles" value="Disponibles:"/>
+                            <h:inputText id="disponibles" styleClass="form-control"
+                                         value="#{productoController.producto.disponibles}" 
+                                         required="true" 
+                                         requiredMessage="Debe ingresar una cantidad">
+                                <f:validateRegex pattern="^[0-9]+([.][0-9]+)?$"/>
+                            </h:inputText>
+
+                        </h:panelGrid>
+                        
+                        <p:toolbar style="background-color: white; border: none;">
+              <f:facet name="left">
+                  <b:commandButton value="Guardar" class="btn btn-primary" action="#{productoController.nuevoProducto()}">
+                </b:commandButton>
+              </f:facet>
+                
+              <f:facet name="right">
+                <b:commandButton value="Restablecer" class="btn btn-danger" style="margin-right:600px;" >
+                    <p:ajax update="panel" resetValues="true" />
+                </b:commandButton>
+              </f:facet>
+              
+              </p:toolbar>
+                    </h:form>
+                </div>
+            </div>
+
+            <div class="row">
+                <h:form id="tablaCliente">
+                    <b:dataTable value="#{productoController.productoList}" var="pro" excel="true"
+                    csv="true"
+                    pdf="true"
+                    columnVisibility="true"
+                    copy="true"
+                    print="true"
+                    style="width: 100%; margin:0 auto;"
+                    responsive="true"
+                    class="table-striped table-bordered"
+                    >
+                        
+                        <b:dataTableColumn value="#{pro.idProducto}" label="Código" />
+                        <b:dataTableColumn value="#{pro.nombreProducto}" label="Nombre Producto" />
+                        <b:dataTableColumn value="#{pro.clasificacion}" label="Clasificación" />
+                        <b:dataTableColumn value="#{pro.costoCompra}" label="Costo Compra" />
+                        <b:dataTableColumn value="#{pro.costoVenta}" label="Costo Venta" />
+                        <b:dataTableColumn value="#{pro.entrada}" label="Entrada" />
+                        <b:dataTableColumn value="#{pro.salida}" label="Salida" />
+                        <b:dataTableColumn value="#{pro.disponibles}" label="Disponibles" />
+                        <b:dataTableColumn label="Operaciones">
+            <center>
+                <b:commandButton value="Modificar" action="#{productoController.editarProducto(producto)}" class="btn-success btn-sm"></b:commandButton>
+                &nbsp;
+               <b:commandButton value="Eliminar" action="#{productoController.eliminarProducto(producto.idProducto)}" onclick="return confirm('¿Esta seguro de eliminar este Producto?')" class="btn-danger btn-sm"></b:commandButton>   
+            </center>
+                        </b:dataTableColumn> 
+                    </b:dataTable>
+                    <b:messages/>
+            </h:form>
+            </div>
+        </div>
+        
+        <footer class="py-5 bg-dark">
+      <div class="container">
+                <b:panel style="background-color: black; color: white; bottom: auto " >
+                    <p class="m-0 text-center text-white" style="font-size: 11pt;">&copy; 2019 | The STOP, Todos los derechos reservados.</p>
+                </b:panel>
+      </div>
+    </footer>
+    </h:body>
+</html>
